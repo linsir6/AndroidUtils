@@ -1,6 +1,7 @@
 package com.linsir.okhttputil.request;
 
-import com.linsir.okhttputil.Callback.Callback;
+import com.linsir.okhttputil.OkHttpUtils;
+import com.linsir.okhttputil.callback.Callback;
 import com.linsir.okhttputil.utils.Exceptions;
 
 import java.io.File;
@@ -44,20 +45,23 @@ public class PostFileRequest extends OkHttpRequest {
         if(callback == null){
             return requestBody;
         }
-
+        CountingRequestBody countingRequestBody = new CountingRequestBody(requestBody,
+        new CountingRequestBody.Listener() {
+            @Override
+            public void onRequestProgress(final long byteWritten, final long contentLength) {
+                OkHttpUtils.getInstance().getDelivery().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.inProgress(byteWritten*1.0f/contentLength,contentLength,id);
+                    }
+                });
+            }
+        });
+        return countingRequestBody;
     }
-
-
-
-
-
-
-
-
-
 
     @Override
     protected Request buildRequest(RequestBody requestBody) {
-        return null;
+        return builder.post(requestBody).build();
     }
 }

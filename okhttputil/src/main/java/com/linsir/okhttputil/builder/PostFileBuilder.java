@@ -1,5 +1,6 @@
 package com.linsir.okhttputil.builder;
 
+import com.linsir.okhttputil.request.PostFileRequest;
 import com.linsir.okhttputil.request.RequestCall;
 
 import java.io.File;

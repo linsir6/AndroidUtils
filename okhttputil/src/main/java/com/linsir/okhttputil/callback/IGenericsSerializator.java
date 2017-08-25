@@ -1,4 +1,4 @@
-package com.linsir.okhttputil.Callback;
+package com.linsir.okhttputil.callback;
 
 /**
  * Created by linSir

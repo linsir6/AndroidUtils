@@ -24,7 +24,6 @@ public class GetBuilder extends OkHttpRequestBuilder<GetBuilder> implements HasP
             url = appendParams(url,params);
         }
         return new GetRequest(url,tag,params,headers,id).build();
-
     }
 
 

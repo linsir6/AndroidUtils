@@ -35,6 +35,13 @@ public class CookieJarImpl implements CookieJar{
 
     @Override
     public List<Cookie> loadForRequest(HttpUrl url) {
-        return null;
+        return cookieStore.get(url);
     }
+
+    public CookieStore getCookieStore(){
+        return cookieStore;
+    }
+
+
+
 }

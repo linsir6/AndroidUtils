@@ -1,6 +1,4 @@
-package com.linsir.okhttputil.Callback;
-
-import java.io.IOException;
+package com.linsir.okhttputil.callback;
 
 import okhttp3.Call;
 import okhttp3.Request;

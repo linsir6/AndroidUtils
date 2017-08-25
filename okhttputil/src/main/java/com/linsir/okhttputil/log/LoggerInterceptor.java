@@ -4,7 +4,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.IOException;
-import java.security.AlgorithmConstraints;
 
 import okhttp3.Headers;
 import okhttp3.Interceptor;
@@ -65,7 +64,7 @@ public class LoggerInterceptor implements Interceptor {
                     MediaType mediaType = body.contentType();
                     if (mediaType != null){
                         Log.e(tag,"responseBody's contentType : " + mediaType.toString());
-                        if (isText(mediaType)){
+                        if (isText(mediaType)) {
                             String resp = body.string();
                             Log.e(tag,"responseBody's content : " + resp);
                             body = ResponseBody.create(mediaType,resp);

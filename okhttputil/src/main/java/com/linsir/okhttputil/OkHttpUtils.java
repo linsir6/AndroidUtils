@@ -1,7 +1,12 @@
 package com.linsir.okhttputil;
 
-import com.linsir.okhttputil.Callback.Callback;
 import com.linsir.okhttputil.builder.GetBuilder;
+import com.linsir.okhttputil.builder.HeadBuilder;
+import com.linsir.okhttputil.builder.OtherRequestBuilder;
+import com.linsir.okhttputil.builder.PostFileBuilder;
+import com.linsir.okhttputil.builder.PostFormBuilder;
+import com.linsir.okhttputil.builder.PostStringBuilder;
+import com.linsir.okhttputil.callback.Callback;
 import com.linsir.okhttputil.request.RequestCall;
 import com.linsir.okhttputil.utils.Platform;
 
@@ -61,6 +66,34 @@ public class OkHttpUtils {
         return new GetBuilder();
     }
 
+    public static PostStringBuilder postString() {
+        return new PostStringBuilder();
+    }
+
+    public static PostFileBuilder postFIle() {
+        return new PostFileBuilder();
+    }
+
+    public static PostFormBuilder post() {
+        return new PostFormBuilder();
+    }
+
+    public static OtherRequestBuilder put() {
+        return new OtherRequestBuilder(METHOD.PUT);
+    }
+
+    public static HeadBuilder head() {
+        return new HeadBuilder();
+    }
+
+    public static OtherRequestBuilder delete() {
+        return new OtherRequestBuilder(METHOD.DELETE);
+    }
+
+    public static OtherRequestBuilder patch() {
+        return new OtherRequestBuilder(METHOD.PATCH);
+    }
+
 
     public void exectue(final RequestCall requestCall, Callback callback) {
         if (callback == null) {
@@ -72,27 +105,55 @@ public class OkHttpUtils {
         requestCall.getCall().enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                sendFai
+                sendFailResultCallback(call, e, finalCallback, id);
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                try{
+                    if(call.isCanceled()){
+                        sendFailResultCallback(call,new IOException("Canceled!"),finalCallback,id);
+                        return;
+                    }
+                    if(!finalCallback.validateResponse(response,id)){
+                        sendFailResultCallback(call, new IOException("request failed , reponse's code is : " + response.code()), finalCallback, id);
+                        return;
+                    }
 
+                    Object o = finalCallback.parseNetworkResponse(response,id);
+                    sendSuccessResultCallback(o,finalCallback,id);
+                }catch (Exception e){
+                    sendFailResultCallback(call,e,finalCallback,id);
+                }finally{
+                    if(response.body()!=null){
+                        response.body().close();
+                    }
+                }
             }
         });
-
-
     }
 
     public void sendFailResultCallback(final Call call, final Exception e, final Callback callback, final int id) {
         if (callback == null){
             return;
         }
-
         mPlatform.execute(new Runnable() {
             @Override
             public void run() {
                 callback.onError(call,e,id);
+                callback.onAfter(id);
+            }
+        });
+    }
+
+    public void sendSuccessResultCallback(final Object object,final Callback callback,final int id){
+        if(callback == null){
+            return;
+        }
+        mPlatform.execute(new Runnable() {
+            @Override
+            public void run() {
+                callback.onResponse(object,id);
                 callback.onAfter(id);
             }
         });
@@ -117,8 +178,6 @@ public class OkHttpUtils {
         public static final String PUT = "PUT";
         public static final String PATCH = "PATCH";
     }
-
-
 }
 
 

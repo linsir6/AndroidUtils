@@ -1,9 +1,7 @@
 package com.linsir.okhttputil.request;
 
-import android.view.SurfaceHolder;
 
-
-import com.linsir.okhttputil.Callback.Callback;
+import com.linsir.okhttputil.callback.Callback;
 import com.linsir.okhttputil.utils.Exceptions;
 
 import java.util.Map;

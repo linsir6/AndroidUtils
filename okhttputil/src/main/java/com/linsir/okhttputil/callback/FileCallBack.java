@@ -1,4 +1,4 @@
-package com.linsir.okhttputil.Callback;
+package com.linsir.okhttputil.callback;
 
 import com.linsir.okhttputil.OkHttpUtils;
 
@@ -9,6 +9,8 @@ import java.io.InputStream;
 
 import okhttp3.Call;
 import okhttp3.Response;
+
+import static android.R.attr.id;
 
 /**
  * Created by linSir
@@ -28,17 +30,7 @@ public abstract class FileCallBack extends Callback<File> {
 
     @Override
     public File parseNetworkResponse(Response response, int d) throws Exception {
-        return null;
-    }
-
-    @Override
-    public void onError(Call call, Exception e, int id) {
-
-    }
-
-    @Override
-    public void onResponse(File response, int id) {
-
+        return saveFile(response,id);
     }
 
     public File saveFile(Response response, final int id) throws IOException {
@@ -89,6 +81,9 @@ public abstract class FileCallBack extends Callback<File> {
         }
 
     }
+
+
+
 
 
 }

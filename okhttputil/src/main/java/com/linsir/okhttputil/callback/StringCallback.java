@@ -1,6 +1,5 @@
-package com.linsir.okhttputil.Callback;
+package com.linsir.okhttputil.callback;
 
-import okhttp3.Call;
 import okhttp3.Response;
 
 /**

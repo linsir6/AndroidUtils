@@ -183,17 +183,6 @@ public class PersistentCookieStore implements CookieStore {
         return cookie;
     }
 
-
-    protected byte[] hexStringToByteArray(String hexString) {
-        int len = hexString.length();
-        byte[] data = new byte[len / 2];
-        for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(hexString.charAt(i), 16) << 4) + Character.digit(hexString.charAt(i + 1), 16));
-        }
-        return data;
-    }
-
-
     protected String byteArrayToHexString(byte[] bytes) {
         StringBuilder sb = new StringBuilder(bytes.length * 2);
         for(byte element : bytes){
@@ -206,6 +195,14 @@ public class PersistentCookieStore implements CookieStore {
         return sb.toString().toUpperCase(Locale.US);
     }
 
+    protected byte[] hexStringToByteArray(String hexString) {
+        int len = hexString.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(hexString.charAt(i), 16) << 4) + Character.digit(hexString.charAt(i + 1), 16));
+        }
+        return data;
+    }
 }
 
 

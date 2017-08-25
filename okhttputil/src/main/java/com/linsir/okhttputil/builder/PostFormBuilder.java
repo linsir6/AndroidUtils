@@ -1,8 +1,12 @@
 package com.linsir.okhttputil.builder;
 
+import com.linsir.okhttputil.request.PostFormRequest;
 import com.linsir.okhttputil.request.RequestCall;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,22 +17,74 @@ import java.util.Map;
 
 public class PostFormBuilder extends OkHttpRequestBuilder<PostFormBuilder> implements HasParamsable {
 
-    private List<FileInput> files = new ArrayList<>;
+    private List<FileInput> files = new ArrayList<>();
 
+    @Override
+    public RequestCall build() {
+        return new PostFormRequest(url,tag,params,headers,files,id).build();
+    }
 
+    public PostFormBuilder files(String key,Map<String,File> files){
+        for(String filename:files.keySet()){
+            this.files.add(new FileInput(key,filename,files.get(filename)));
+        }
+        return this;
+    }
+
+    public static class FileInput{
+
+        public String key;
+        public String filename;
+        public File file;
+
+        public FileInput(String name,String filename,File file){
+            this.key = name;
+            this.filename = filename;
+            this.file = file;
+        }
+
+        @Override
+        public String toString() {
+            return "FileInput{" +
+                    "key='" + key + '\'' +
+                    ", filename='" + filename + '\'' +
+                    ", file=" + file +
+                    '}';
+        }
+    }
 
     @Override
     public OkHttpRequestBuilder params(Map<String, String> params) {
-        return null;
+        this.params = params;
+        return this;
     }
 
     @Override
     public OkHttpRequestBuilder addParams(String key, String val) {
-        return null;
+        if (this.params == null){
+            params = new LinkedHashMap<>();
+        }
+        params.put(key,val);
+        return this;
     }
 
-    @Override
-    public RequestCall build() {
-        return null;
-    }
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
